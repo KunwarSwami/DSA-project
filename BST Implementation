@@ -1,125 +1,125 @@
-#include <iostream>
-
-using namespace std;
-
-struct TreeNode {
+class TreeNode {
     int val;
-    TreeNode* left;
-    TreeNode* right;
-    TreeNode(int x) : val(x), left(NULL), right(NULL) {}
-};
+    TreeNode left, right;
 
-// Insert a node
-TreeNode* insert(TreeNode* root, int key) {
-    if (!root) return new TreeNode(key);
-    if (key < root->val)
-        root->left = insert(root->left, key);
-    else if (key > root->val)
-        root->right = insert(root->right, key);
-    return root;
+    TreeNode(int x) {
+        val = x;
+        left = right = null;
+    }
 }
 
-// Search for a node
-TreeNode* search(TreeNode* root, int key) {
-    if (!root || root->val == key)
-        return root;
-    if (key < root->val)
-        return search(root->left, key);
-    return search(root->right, key);
-}
+public class BSTExample {
+    public static void main(String[] args) {
+        TreeNode root = null;
+        BSTExample bst = new BSTExample();
 
-// Find the minimum value node
-TreeNode* minValueNode(TreeNode* node) {
-    TreeNode* current = node;
-    while (current && current->left)
-        current = current->left;
-    return current;
-}
+        root = bst.insert(root, 50);
+        root = bst.insert(root, 30);
+        root = bst.insert(root, 20);
+        root = bst.insert(root, 40);
+        root = bst.insert(root, 70);
+        root = bst.insert(root, 60);
+        root = bst.insert(root, 80);
 
-// Delete a node
-TreeNode* deleteNode(TreeNode* root, int key) {
-    if (!root) return root;
-    if (key < root->val)
-        root->left = deleteNode(root->left, key);
-    else if (key > root->val)
-        root->right = deleteNode(root->right, key);
-    else {
-        if (!root->left) {
-            TreeNode* temp = root->right;
-            delete root;
-            return temp;
-        } else if (!root->right) {
-            TreeNode* temp = root->left;
-            delete root;
-            return temp;
+        System.out.print("InOrder traversal: ");
+        bst.inOrder(root);
+        System.out.println();
+
+        System.out.print("PreOrder traversal: ");
+        bst.preOrder(root);
+        System.out.println();
+
+        System.out.print("PostOrder traversal: ");
+        bst.postOrder(root);
+        System.out.println();
+
+        System.out.println("Deleting 20");
+        root = bst.deleteNode(root, 20);
+        System.out.print("InOrder traversal after deletion: ");
+        bst.inOrder(root);
+        System.out.println();
+
+        TreeNode found = bst.search(root, 30);
+        if (found != null)
+            System.out.println("Node 30 found in the tree.");
+        else
+            System.out.println("Node 30 not found in the tree.");
+    }
+
+    // Insert method
+    TreeNode insert(TreeNode root, int key) {
+        if (root == null) {
+            root = new TreeNode(key);
+            return root;
         }
-        TreeNode* temp = minValueNode(root->right);
-        root->val = temp->val;
-        root->right = deleteNode(root->right, temp->val);
+        if (key < root.val)
+            root.left = insert(root.left, key);
+        else if (key > root.val)
+            root.right = insert(root.right, key);
+        return root;
     }
-    return root;
-}
 
-// InOrder Traversal
-void inOrder(TreeNode* root) {
-    if (root) {
-        inOrder(root->left);
-        cout << root->val << " ";
-        inOrder(root->right);
+    // Search method
+    TreeNode search(TreeNode root, int key) {
+        if (root == null || root.val == key)
+            return root;
+        if (key < root.val)
+            return search(root.left, key);
+        return search(root.right, key);
     }
-}
 
-// PreOrder Traversal
-void preOrder(TreeNode* root) {
-    if (root) {
-        cout << root->val << " ";
-        preOrder(root->left);
-        preOrder(root->right);
+    // Delete method
+    TreeNode deleteNode(TreeNode root, int key) {
+        if (root == null) return root;
+        if (key < root.val)
+            root.left = deleteNode(root.left, key);
+        else if (key > root.val)
+            root.right = deleteNode(root.right, key);
+        else {
+            if (root.left == null)
+                return root.right;
+            else if (root.right == null)
+                return root.left;
+            root.val = minValue(root.right);
+            root.right = deleteNode(root.right, root.val);
+        }
+        return root;
     }
-}
 
-// PostOrder Traversal
-void postOrder(TreeNode* root) {
-    if (root) {
-        postOrder(root->left);
-        postOrder(root->right);
-        cout << root->val << " ";
+    // Helper method to find the minimum value node
+    int minValue(TreeNode root) {
+        int minv = root.val;
+        while (root.left != null) {
+            minv = root.left.val;
+            root = root.left;
+        }
+        return minv;
     }
-}
 
-int main() {
-    TreeNode* root = NULL;
-    root = insert(root, 50);
-    insert(root, 30);
-    insert(root, 20);
-    insert(root, 40);
-    insert(root, 70);
-    insert(root, 60);
-    insert(root, 80);
+    // InOrder traversal method
+    void inOrder(TreeNode root) {
+        if (root != null) {
+            inOrder(root.left);
+            System.out.print(root.val + " ");
+            inOrder(root.right);
+        }
+    }
 
-    cout << "InOrder traversal: ";
-    inOrder(root);
-    cout << endl;
+    // PreOrder traversal method
+    void preOrder(TreeNode root) {
+        if (root != null) {
+            System.out.print(root.val + " ");
+            preOrder(root.left);
+            preOrder(root.right);
+        }
+    }
 
-    cout << "PreOrder traversal: ";
-    preOrder(root);
-    cout << endl;
-
-    cout << "PostOrder traversal: ";
-    postOrder(root);
-    cout << endl;
-
-    cout << "Deleting 20\n";
-    root = deleteNode(root, 20);
-    cout << "InOrder traversal after deletion: ";
-    inOrder(root);
-    cout << endl;
-
-    TreeNode* found = search(root, 30);
-    if (found)
-        cout << "Node 30 found in the tree.\n";
-    else
-        cout << "Node 30 not found in the tree.\n";
-
-    return 0;
+    // PostOrder traversal method
+    void postOrder(TreeNode root) {
+        if (root != null) {
+            postOrder(root.left);
+            postOrder(root.right);
+            System.out.print(root.val + " ");
+        }
+    }
 }
