@@ -1,0 +1,146 @@
+Project Report: Binary Search Tree Implementation in C++
+1. Introduction
+This project involves the implementation of a Binary Search Tree (BST) in C++. A BST is a data structure that stores elements in a hierarchical order, allowing efficient insertion, deletion, and lookup operations. Additionally, BSTs support several traversal methods, which are crucial for accessing and displaying the elements in various orders.
+
+2. Features and Functionalities
+Node Structure
+
+Each node in the BST contains an integer value and pointers to its left and right children.
+cpp
+Copy code
+struct TreeNode {
+    int val;
+    TreeNode* left;
+    TreeNode* right;
+    TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+};
+Insertion
+
+Adds a new node to the BST while maintaining the binary search property.
+Function: TreeNode* insert(TreeNode* root, int key)
+Algorithm:
+If the tree is empty, create a new node as the root.
+Recursively find the correct position for the new node.
+Insert the node as a leaf in the appropriate position.
+Search
+
+Finds a node with a specific value in the BST.
+Function: TreeNode* search(TreeNode* root, int key)
+Algorithm:
+Start at the root and compare the value with the target.
+Traverse left or right based on comparison until the node is found or the search ends at a leaf node.
+Deletion
+
+Removes a node from the BST while maintaining the binary search property.
+Function: TreeNode* deleteNode(TreeNode* root, int key)
+Algorithm:
+Find the node to be deleted.
+If the node has no children, delete it directly.
+If the node has one child, replace it with its child.
+If the node has two children, replace it with its in-order successor (minimum value node in the right subtree) and delete the successor.
+Traversals
+
+Visit all the nodes of the tree in a specific order.
+
+InOrder Traversal:
+
+Function: void inOrder(TreeNode* root)
+Order: Left subtree → Node → Right subtree
+Use: Produces nodes in non-decreasing order.
+PreOrder Traversal:
+
+Function: void preOrder(TreeNode* root)
+Order: Node → Left subtree → Right subtree
+Use: Useful for creating a copy of the tree.
+PostOrder Traversal:
+
+Function: void postOrder(TreeNode* root)
+Order: Left subtree → Right subtree → Node
+Use: Useful for deleting the tree.
+3. Implementation Details
+Insert Function
+
+cpp
+Copy code
+TreeNode* insert(TreeNode* root, int key) {
+    if (!root) return new TreeNode(key);
+    if (key < root->val)
+        root->left = insert(root->left, key);
+    else if (key > root->val)
+        root->right = insert(root->right, key);
+    return root;
+}
+Search Function
+
+cpp
+Copy code
+TreeNode* search(TreeNode* root, int key) {
+    if (!root || root->val == key)
+        return root;
+    if (key < root->val)
+        return search(root->left, key);
+    return search(root->right, key);
+}
+Delete Function
+
+cpp
+Copy code
+TreeNode* deleteNode(TreeNode* root, int key) {
+    if (!root) return root;
+    if (key < root->val)
+        root->left = deleteNode(root->left, key);
+    else if (key > root->val)
+        root->right = deleteNode(root->right, key);
+    else {
+        if (!root->left) {
+            TreeNode* temp = root->right;
+            delete root;
+            return temp;
+        } else if (!root->right) {
+            TreeNode* temp = root->left;
+            delete root;
+            return temp;
+        }
+        TreeNode* temp = minValueNode(root->right);
+        root->val = temp->val;
+        root->right = deleteNode(root->right, temp->val);
+    }
+    return root;
+}
+InOrder Traversal
+
+cpp
+Copy code
+void inOrder(TreeNode* root) {
+    if (root) {
+        inOrder(root->left);
+        cout << root->val << " ";
+        inOrder(root->right);
+    }
+}
+PreOrder Traversal
+
+cpp
+Copy code
+void preOrder(TreeNode* root) {
+    if (root) {
+        cout << root->val << " ";
+        preOrder(root->left);
+        preOrder(root->right);
+    }
+}
+PostOrder Traversal
+
+cpp
+Copy code
+void postOrder(TreeNode* root) {
+    if (root) {
+        postOrder(root->left);
+        postOrder(root->right);
+        cout << root->val << " ";
+    }
+}
+4. Conclusion
+This project demonstrates the fundamental operations of a Binary Search Tree (BST) in C++, including insertion, deletion, 
+search, and traversals (InOrder, PreOrder, PostOrder). These operations and traversals are crucial for managing hierarchical data efficiently. 
+The provided implementation can be used as a basis for more advanced tree-based data structures and algorithms.
