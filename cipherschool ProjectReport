@@ -1,23 +1,27 @@
-Project Report: Binary Search Tree Implementation in C++
+Project Report: Binary Search Tree Implementation in Java
 1. Introduction
-This project involves the implementation of a Binary Search Tree (BST) in C++. A BST is a data structure that stores elements in a hierarchical order, allowing efficient insertion, deletion, and lookup operations. Additionally, BSTs support several traversal methods, which are crucial for accessing and displaying the elements in various orders.
+This project involves the implementation of a Binary Search Tree (BST) in Java.
+A BST is a data structure that stores elements in a hierarchical order, allowing efficient insertion, deletion,
+and lookup operations. Additionally, BSTs support several traversal methods, which are crucial for accessing and displaying the elements in various orders.
 
 2. Features and Functionalities
 Node Structure
 
-Each node in the BST contains an integer value and pointers to its left and right children.
-cpp
+Each node in the BST contains an integer value and references to its left and right children.
+java
 Copy code
-struct TreeNode {
+class TreeNode {
     int val;
-    TreeNode* left;
-    TreeNode* right;
-    TreeNode(int x) : val(x), left(NULL), right(NULL) {}
-};
+    TreeNode left, right;
+    TreeNode(int x) {
+        val = x;
+        left = right = null;
+    }
+}
 Insertion
 
 Adds a new node to the BST while maintaining the binary search property.
-Function: TreeNode* insert(TreeNode* root, int key)
+Method: TreeNode insert(TreeNode root, int key)
 Algorithm:
 If the tree is empty, create a new node as the root.
 Recursively find the correct position for the new node.
@@ -25,14 +29,14 @@ Insert the node as a leaf in the appropriate position.
 Search
 
 Finds a node with a specific value in the BST.
-Function: TreeNode* search(TreeNode* root, int key)
+Method: TreeNode search(TreeNode root, int key)
 Algorithm:
 Start at the root and compare the value with the target.
 Traverse left or right based on comparison until the node is found or the search ends at a leaf node.
 Deletion
 
 Removes a node from the BST while maintaining the binary search property.
-Function: TreeNode* deleteNode(TreeNode* root, int key)
+Method: TreeNode deleteNode(TreeNode root, int key)
 Algorithm:
 Find the node to be deleted.
 If the node has no children, delete it directly.
@@ -44,103 +48,236 @@ Visit all the nodes of the tree in a specific order.
 
 InOrder Traversal:
 
-Function: void inOrder(TreeNode* root)
+Method: void inOrder(TreeNode root)
 Order: Left subtree → Node → Right subtree
 Use: Produces nodes in non-decreasing order.
 PreOrder Traversal:
 
-Function: void preOrder(TreeNode* root)
+Method: void preOrder(TreeNode root)
 Order: Node → Left subtree → Right subtree
 Use: Useful for creating a copy of the tree.
 PostOrder Traversal:
 
-Function: void postOrder(TreeNode* root)
+Method: void postOrder(TreeNode root)
 Order: Left subtree → Right subtree → Node
 Use: Useful for deleting the tree.
 3. Implementation Details
-Insert Function
+Insert Method
 
-cpp
+java
 Copy code
-TreeNode* insert(TreeNode* root, int key) {
-    if (!root) return new TreeNode(key);
-    if (key < root->val)
-        root->left = insert(root->left, key);
-    else if (key > root->val)
-        root->right = insert(root->right, key);
+TreeNode insert(TreeNode root, int key) {
+    if (root == null) {
+        root = new TreeNode(key);
+        return root;
+    }
+    if (key < root.val)
+        root.left = insert(root.left, key);
+    else if (key > root.val)
+        root.right = insert(root.right, key);
     return root;
 }
-Search Function
+Search Method
 
-cpp
+java
 Copy code
-TreeNode* search(TreeNode* root, int key) {
-    if (!root || root->val == key)
+TreeNode search(TreeNode root, int key) {
+    if (root == null || root.val == key)
         return root;
-    if (key < root->val)
-        return search(root->left, key);
-    return search(root->right, key);
+    if (key < root.val)
+        return search(root.left, key);
+    return search(root.right, key);
 }
-Delete Function
+Delete Method
 
-cpp
+java
 Copy code
-TreeNode* deleteNode(TreeNode* root, int key) {
-    if (!root) return root;
-    if (key < root->val)
-        root->left = deleteNode(root->left, key);
-    else if (key > root->val)
-        root->right = deleteNode(root->right, key);
+TreeNode deleteNode(TreeNode root, int key) {
+    if (root == null) return root;
+    if (key < root.val)
+        root.left = deleteNode(root.left, key);
+    else if (key > root.val)
+        root.right = deleteNode(root.right, key);
     else {
-        if (!root->left) {
-            TreeNode* temp = root->right;
-            delete root;
-            return temp;
-        } else if (!root->right) {
-            TreeNode* temp = root->left;
-            delete root;
-            return temp;
+        if (root.left == null) {
+            return root.right;
+        } else if (root.right == null) {
+            return root.left;
         }
-        TreeNode* temp = minValueNode(root->right);
-        root->val = temp->val;
-        root->right = deleteNode(root->right, temp->val);
+        root.val = minValue(root.right);
+        root.right = deleteNode(root.right, root.val);
     }
     return root;
 }
+
+int minValue(TreeNode root) {
+    int minv = root.val;
+    while (root.left != null) {
+        minv = root.left.val;
+        root = root.left;
+    }
+    return minv;
+}
 InOrder Traversal
 
-cpp
+java
 Copy code
-void inOrder(TreeNode* root) {
-    if (root) {
-        inOrder(root->left);
-        cout << root->val << " ";
-        inOrder(root->right);
+void inOrder(TreeNode root) {
+    if (root != null) {
+        inOrder(root.left);
+        System.out.print(root.val + " ");
+        inOrder(root.right);
     }
 }
 PreOrder Traversal
 
-cpp
+java
 Copy code
-void preOrder(TreeNode* root) {
-    if (root) {
-        cout << root->val << " ";
-        preOrder(root->left);
-        preOrder(root->right);
+void preOrder(TreeNode root) {
+    if (root != null) {
+        System.out.print(root.val + " ");
+        preOrder(root.left);
+        preOrder(root.right);
     }
 }
 PostOrder Traversal
 
-cpp
+java
 Copy code
-void postOrder(TreeNode* root) {
-    if (root) {
-        postOrder(root->left);
-        postOrder(root->right);
-        cout << root->val << " ";
+void postOrder(TreeNode root) {
+    if (root != null) {
+        postOrder(root.left);
+        postOrder(root.right);
+        System.out.print(root.val + " ");
     }
 }
 4. Conclusion
-This project demonstrates the fundamental operations of a Binary Search Tree (BST) in C++, including insertion, deletion, 
-search, and traversals (InOrder, PreOrder, PostOrder). These operations and traversals are crucial for managing hierarchical data efficiently. 
-The provided implementation can be used as a basis for more advanced tree-based data structures and algorithms.
+This project demonstrates the fundamental operations of a Binary Search Tree (BST) in Java, including insertion, deletion, search, and traversals (InOrder, PreOrder, PostOrder). These operations and traversals are crucial for managing hierarchical data efficiently. The provided implementation can be used as a basis for more advanced tree-based data structures and algorithms.
+
+5. Example Usage
+Here's how you can use the above implementations in a main class:
+
+java
+Copy code
+public class BSTExample {
+    public static void main(String[] args) {
+        TreeNode root = null;
+        BSTExample bst = new BSTExample();
+
+        root = bst.insert(root, 50);
+        root = bst.insert(root, 30);
+        root = bst.insert(root, 20);
+        root = bst.insert(root, 40);
+        root = bst.insert(root, 70);
+        root = bst.insert(root, 60);
+        root = bst.insert(root, 80);
+
+        System.out.print("InOrder traversal: ");
+        bst.inOrder(root);
+        System.out.println();
+
+        System.out.print("PreOrder traversal: ");
+        bst.preOrder(root);
+        System.out.println();
+
+        System.out.print("PostOrder traversal: ");
+        bst.postOrder(root);
+        System.out.println();
+
+        System.out.println("Deleting 20");
+        root = bst.deleteNode(root, 20);
+        System.out.print("InOrder traversal after deletion: ");
+        bst.inOrder(root);
+        System.out.println();
+
+        TreeNode found = bst.search(root, 30);
+        if (found != null)
+            System.out.println("Node 30 found in the tree.");
+        else
+            System.out.println("Node 30 not found in the tree.");
+    }
+
+    // Insert method
+    TreeNode insert(TreeNode root, int key) {
+        if (root == null) {
+            root = new TreeNode(key);
+            return root;
+        }
+        if (key < root.val)
+            root.left = insert(root.left, key);
+        else if (key > root.val)
+            root.right = insert(root.right, key);
+        return root;
+    }
+
+    // Search method
+    TreeNode search(TreeNode root, int key) {
+        if (root == null || root.val == key)
+            return root;
+        if (key < root.val)
+            return search(root.left, key);
+        return search(root.right, key);
+    }
+
+    // Delete method
+    TreeNode deleteNode(TreeNode root, int key) {
+        if (root == null) return root;
+        if (key < root.val)
+            root.left = deleteNode(root.left, key);
+        else if (key > root.val)
+            root.right = deleteNode(root.right, key);
+        else {
+            if (root.left == null)
+                return root.right;
+            else if (root.right == null)
+                return root.left;
+            root.val = minValue(root.right);
+            root.right = deleteNode(root.right, root.val);
+        }
+        return root;
+    }
+
+    // Helper method to find the minimum value node
+    int minValue(TreeNode root) {
+        int minv = root.val;
+        while (root.left != null) {
+            minv = root.left.val;
+            root = root.left;
+        }
+        return minv;
+    }
+
+    // InOrder traversal method
+    void inOrder(TreeNode root) {
+        if (root != null) {
+            inOrder(root.left);
+            System.out.print(root.val + " ");
+            inOrder(root.right);
+        }
+    }
+
+    // PreOrder traversal method
+    void preOrder(TreeNode root) {
+        if (root != null) {
+            System.out.print(root.val + " ");
+            preOrder(root.left);
+            preOrder(root.right);
+        }
+    }
+
+    // PostOrder traversal method
+    void postOrder(TreeNode root) {
+        if (root != null) {
+            postOrder(root.left);
+            postOrder(root.right);
+            System.out.print(root.val + " ");
+        }
+    }
+}
+This example demonstrates the creation and manipulation of a BST using the defined operations and traversal methods.
+
+
+
+
+
+
