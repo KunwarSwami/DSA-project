@@ -1,0 +1,125 @@
+#include <iostream>
+
+using namespace std;
+
+struct TreeNode {
+    int val;
+    TreeNode* left;
+    TreeNode* right;
+    TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+};
+
+// Insert a node
+TreeNode* insert(TreeNode* root, int key) {
+    if (!root) return new TreeNode(key);
+    if (key < root->val)
+        root->left = insert(root->left, key);
+    else if (key > root->val)
+        root->right = insert(root->right, key);
+    return root;
+}
+
+// Search for a node
+TreeNode* search(TreeNode* root, int key) {
+    if (!root || root->val == key)
+        return root;
+    if (key < root->val)
+        return search(root->left, key);
+    return search(root->right, key);
+}
+
+// Find the minimum value node
+TreeNode* minValueNode(TreeNode* node) {
+    TreeNode* current = node;
+    while (current && current->left)
+        current = current->left;
+    return current;
+}
+
+// Delete a node
+TreeNode* deleteNode(TreeNode* root, int key) {
+    if (!root) return root;
+    if (key < root->val)
+        root->left = deleteNode(root->left, key);
+    else if (key > root->val)
+        root->right = deleteNode(root->right, key);
+    else {
+        if (!root->left) {
+            TreeNode* temp = root->right;
+            delete root;
+            return temp;
+        } else if (!root->right) {
+            TreeNode* temp = root->left;
+            delete root;
+            return temp;
+        }
+        TreeNode* temp = minValueNode(root->right);
+        root->val = temp->val;
+        root->right = deleteNode(root->right, temp->val);
+    }
+    return root;
+}
+
+// InOrder Traversal
+void inOrder(TreeNode* root) {
+    if (root) {
+        inOrder(root->left);
+        cout << root->val << " ";
+        inOrder(root->right);
+    }
+}
+
+// PreOrder Traversal
+void preOrder(TreeNode* root) {
+    if (root) {
+        cout << root->val << " ";
+        preOrder(root->left);
+        preOrder(root->right);
+    }
+}
+
+// PostOrder Traversal
+void postOrder(TreeNode* root) {
+    if (root) {
+        postOrder(root->left);
+        postOrder(root->right);
+        cout << root->val << " ";
+    }
+}
+
+int main() {
+    TreeNode* root = NULL;
+    root = insert(root, 50);
+    insert(root, 30);
+    insert(root, 20);
+    insert(root, 40);
+    insert(root, 70);
+    insert(root, 60);
+    insert(root, 80);
+
+    cout << "InOrder traversal: ";
+    inOrder(root);
+    cout << endl;
+
+    cout << "PreOrder traversal: ";
+    preOrder(root);
+    cout << endl;
+
+    cout << "PostOrder traversal: ";
+    postOrder(root);
+    cout << endl;
+
+    cout << "Deleting 20\n";
+    root = deleteNode(root, 20);
+    cout << "InOrder traversal after deletion: ";
+    inOrder(root);
+    cout << endl;
+
+    TreeNode* found = search(root, 30);
+    if (found)
+        cout << "Node 30 found in the tree.\n";
+    else
+        cout << "Node 30 not found in the tree.\n";
+
+    return 0;
+}
